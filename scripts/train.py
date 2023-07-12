@@ -21,4 +21,4 @@ epu.fit(x=EPUNet.get_pfm([], 128, 128), epochs=100, validation_data=[],
         batch_size=32,
         callbacks=[es, reduce_lr])
 
-epu.save_weights("./trained_models/{}.h5".format(name))
+epu.save_weights("./trained_models/{}.h5".format(epu.get_name()))
