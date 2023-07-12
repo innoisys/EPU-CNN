@@ -1,2 +1,2 @@
 # EPU-CNN
-E pluribus unum interpretable convolutional neural networks
+This is the official Tensorflow implementation of "E pluribus unum interpretable convolutional neural networks"
