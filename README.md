@@ -23,5 +23,9 @@ perceivable interpretations.
 If you find this work useful, please cite our paper:
 
 ```
-It will be added with the publication of the paper.
-```
+@article{dimas2022pluribus,
+  title = {E Pluribus Unum Interpretable Convolutional Neural Networks},
+  author = {Dimas, George and Cholopoulou, Eirini and Iakovidis, Dimitris K},
+  journal = {arXiv preprint arXiv:2208.05369},
+  year = {2022}
+}```
