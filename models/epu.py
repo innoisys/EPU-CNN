@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 import tensorflow as tf
 
+from tqdm import tqdm
 from copy import deepcopy
 from utils.image_preprocessing import PreProcess, normalize, coarse_fine_representation, light_dark_representations, \
     lab_representation
@@ -10,7 +11,7 @@ from skimage.filters.thresholding import threshold_yen
 from subnetworks import Subnet
 from tensorflow.keras.layers import Activation, GlobalAveragePooling2D, Flatten, Dense, concatenate, AveragePooling2D, \
     Softmax
-from tqdm import tqdm
+
 
 class EPUNet(tf.keras.Model):
 

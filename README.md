@@ -1,5 +1,10 @@
 # EPU-CNN
+[![GitHub stars](https://img.shields.io/github/stars/innoisys/EPU-CNN.svg?style=flat&label=Star)](https://github.com/innoisys/EPU-CNN/)
+[![Readme](https://img.shields.io/badge/README-green.svg)](README.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This is the official <b>Tensorflow</b> implementation of "E pluribus unum interpretable convolutional neural networks".
+
 
 ## Paper Abstract
 The adoption of convolutional neural network (CNN) models in high-stake domains is hindered by their inability to meet 
@@ -18,6 +23,131 @@ perceivable interpretations.
 
 ## Usage
 
+**EPU-CNN**, to the best of our knowledge, is the first framework based on **Generalized Additive Models** for the construction of **Inherently
+Interpretable CNN models**, regardless of the base CNN architecture used and the application domain.
+Unlike current approaches, the models constructed by EPU-CNN enables interpretable classification based both
+on perceptual features and their spatial expression within an image; thus, it enables a more thorough and intuitive
+interpretation of the classification results.
+
+EPU-CNN is capable of providing both **qualitative and quantitative classification interpretations**. An example of 
+image-specific interpretations provided by the EPU-CNN is shown below:
+
+![Interpretation Example](assests/interpretation_example.png)
+
+The quantitative interpretations on each image can be used to construct dataset level interpretations, which can be used
+to identify the most important perceptual features for the classification task. An example of such an interpretation is
+shown below:
+
+![Dataset Interpretation Example](assests/dataset_interpretation_example.png)
+
+To use EPU-CNN, you need to provide a **base CNN architecture** and a **perceptual feature extractor**. In this repository
+we provide exemplary base CNN architectures and perceptual feature extractors used in our experimentations. An example of usage
+is shown below:
+
+```python
+from models.epu import EPUNet
+from models.subnetworks import Subnet
+
+# Initialize the EPU-CNN model
+epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", 
+             subnet=Subnet, num_classes=1, num_pfms=4, 
+             fc_hidden_units=512)
+```
+
+The `subnet` defines the base CNN architecture. In our implementation `init_size` defines the number of 
+features in the first convolutional layers that is incremented  by a factor of **2** in each subsequent convolutional 
+block of the base CNN architecture. `hidden_units` defines the number of hidden units in the fully connected layers of
+the base CNN architecture. `num_pfms` defines the number of perceptual feature maps used as input for a particular 
+application.
+
+The `subnet_act` defines the output activation function of the base CNN architecture and the `epu_act` defines the inverse
+of the link function **g** used to provide the final output of the EPU-CNN model.
+
+Currently, the `EPUNet` class has an implementation of `get_pfm` method that can be used to extract the PFMs of 
+__green-red, blue-yellow, coarse-fine and light-dark__. The `get_pfm` takes as input a list of images (`np.ndarray`) and
+outputs a tuple of PFMs. In its current form, `EPUNet` takes as input for training and inference a `tuple` of PFMs where
+each position of the tuple is an `np.ndarray` of shape `(batch_size, height, width, 1)`.
+
+### Training
+
+An example of the training process is provided in the `train.py` script. The `train.py` script can be used to train an
+EPU-CNN model given a set of training images and target labels. The `train.py` script can be used as follows:
+
+```python
+    images_train, images_validation = ...
+    labels_train, labels_validation = ...
+    epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
+                subnet=Subnet, fc_hidden_units=512, classes=1)
+    epu.set_name("example-model")
+    epu.fit(x=EPUNet.get_pfm(images, 128, 128), y=labels_train, epochs=100, 
+            validation_data=(EPUNet.get_pfm(images, 128, 128), labels_validation),
+            batch_size=32)
+```
+
+It is recomended to save the trained model using either the `save_model` function or save the weights using the `np.save`
+function. For example. 
+
+```python
+    epu.save_model("example-model")
+    # or
+    np.save("example-model-weights", epu.get_weights())
+```
+
+The `save_weights` method does not work with subclassed models.
+
+### Interpretations
+
+Currently `EPUNet` provides its interpretations using the `get_interpretation` and `get_prm` methods. The 
+`get_interpretation` returns the qunatitative contributions of each **PFM** used whereas `get_prm` returns the
+spatial expression of each **PFM** used on the image. To get the exact results with the paper the `get_prm` results need 
+to be propagated to the `refine_prm` method of the `EPUNet` class.
+
+```python
+    images = ...
+    epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
+                subnet=Subnet, fc_hidden_units=512, classes=1)
+    epu.load_model("example-model")
+    epu.predict(EPUNet.get_pfm(images[0], 128, 128))
+    
+    # Get Relevance Similarity Scores 
+    rss = epu.get_interpretation()
+    
+    # Get Perceptual Relevance Maps
+    prms = epu.refine_prm(epu.get_prm())
+```
+
+## Datasets
+
+The datasets below have been used for training and evaluating the EPU-CNN models.
+
+* [Banapple](https://github.com/innoisys/Banapple)
+* [KID Dataset](https://mdss.uth.gr/datasets/endoscopy/kid/)
+* [Kvasir](https://datasets.simula.no/kvasir/)
+* [ISIC-2019](https://challenge2019.isic-archive.com/)
+* [CIFAR-10](http://www.cs.toronto.edu/~kriz/cifar.html)
+* [MNIST](http://yann.lecun.com/exdb/mnist/)
+* [Fashion-MNIST](https://github.com/zalandoresearch/fashion-mnist)
+* [iBeans](https://github.com/AI-Lab-Makerere/ibean/)
+
+The **Banapple**, **KID Dataset**, **Kvasir** and **ISIC-2019** have been downloaded from their respective sources and 
+have been curated manually for the training and evaluation of EPU-CNN models. The **CIFAR-10**, **MNIST**, 
+**Fashion-MNIST** and **iBeans** datasets have been used via the [Tensorflow Datasets API](https://www.tensorflow.org/datasets). 
+
+## TODO
+
+- [X] Add references to all the paper datasets
+- [ ] Refine README.md
+- [ ] Add requirements.txt
+- [ ] Implement interpretation visualizations in a nice formats
+- [ ] Add evaluation code
+- [ ] Add Wavelet PFM extraction
+- [ ] Add Multiclass Training and Evaluation code
+- [ ] Replace the .arxiv with official Scientific Reports citation
+
+## Contributors
+* [George Dimas](gdimas@uth.gr)
+* [Eirini Cholopoulou](echolopoulou@uth.gr)
+* [Dimitris Iakovidis](diakovidis@uth.gr)
 
 ## Citation
 If you find this work useful, please cite our paper:
