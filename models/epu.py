@@ -6,7 +6,7 @@ from copy import deepcopy
 from utils.image_preprocessing import PreProcess
 from skimage.measure.entropy import shannon_entropy
 from skimage.filters.thresholding import threshold_yen
-from subnet import Subnet, SubnetTwo, SubnetEffNet, MiniVGGIncRes, DummySubnet, BinaryTask, MultiTask, DummyCapsule
+from subnetworks import Subnet
 from tensorflow.keras.layers import Activation, GlobalAveragePooling2D, Flatten, Dense, concatenate, AveragePooling2D, \
     Softmax
 
