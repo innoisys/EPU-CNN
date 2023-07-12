@@ -74,23 +74,23 @@ An example of the training process is provided in the `train.py` script. The `tr
 EPU-CNN model given a set of training images and target labels. The `train.py` script can be used as follows:
 
 ```python
-    images_train, images_validation = ...
-    labels_train, labels_validation = ...
-    epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
+images_train, images_validation = ...
+labels_train, labels_validation = ...
+epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
                 subnet=Subnet, fc_hidden_units=512, classes=1)
-    epu.set_name("example-model")
-    epu.fit(x=EPUNet.get_pfm(images, 128, 128), y=labels_train, epochs=100, 
-            validation_data=(EPUNet.get_pfm(images, 128, 128), labels_validation),
-            batch_size=32)
+epu.set_name("example-model")
+epu.fit(x=EPUNet.get_pfm(images, 128, 128), y=labels_train, epochs=100, 
+        validation_data=(EPUNet.get_pfm(images, 128, 128), labels_validation),
+        batch_size=32)
 ```
 
 It is recomended to save the trained model using either the `save_model` function or save the weights using the `np.save`
 function. For example. 
 
 ```python
-    epu.save_model("example-model")
-    # or
-    np.save("example-model-weights", epu.get_weights())
+epu.save_model("example-model")
+# or
+np.save("example-model-weights", epu.get_weights())
 ```
 
 The `save_weights` method does not work with subclassed models.
@@ -103,17 +103,17 @@ spatial expression of each **PFM** used on the image. To get the exact results w
 to be propagated to the `refine_prm` method of the `EPUNet` class.
 
 ```python
-    images = ...
-    epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
-                subnet=Subnet, fc_hidden_units=512, classes=1)
-    epu.load_model("example-model")
-    epu.predict(EPUNet.get_pfm(images[0], 128, 128))
+images = ...
+epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
+             subnet=Subnet, fc_hidden_units=512, classes=1)
+epu.load_model("example-model")
+epu.predict(EPUNet.get_pfm(images[0], 128, 128))
     
-    # Get Relevance Similarity Scores 
-    rss = epu.get_interpretation()
+# Get Relevance Similarity Scores 
+rss = epu.get_interpretation()
     
-    # Get Perceptual Relevance Maps
-    prms = epu.refine_prm(epu.get_prm())
+# Get Perceptual Relevance Maps
+prms = epu.refine_prm(epu.get_prm())
 ```
 
 ## Datasets
