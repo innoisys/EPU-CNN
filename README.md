@@ -150,7 +150,7 @@ have been curated manually for the training and evaluation of EPU-CNN models. Th
 * [Dimitris Iakovidis](diakovidis@uth.gr)
 
 ## Citation
-If you find this work useful, please cite our paper:
+If you have found this work useful, please cite our paper:
 
 ```
 @article{dimas2022pluribus,
