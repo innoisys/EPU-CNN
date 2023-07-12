@@ -15,3 +15,13 @@ publicly available datasets, as well as a contributed benchmark dataset. Medical
 applicability of EPU-CNN for risk-sensitive decisions in medicine. The experimental results indicate that EPU-CNN models 
 can achieve a comparable or better classification performance than other CNN architectures while providing humanly 
 perceivable interpretations.
+
+## Usage
+
+
+## Citation
+If you find this work useful, please cite our paper:
+
+```
+It will be added with the publication of the paper.
+```

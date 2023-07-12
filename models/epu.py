@@ -1,15 +1,14 @@
-import tensorflow as tf
-import numpy as np
 import cv2 as cv
+import numpy as np
+import tensorflow as tf
 
-from subnet import Subnet, SubnetTwo, SubnetEffNet, MiniVGGIncRes, DummySubnet, BinaryTask, MultiTask, DummyCapsule
-from tensorflow.keras.layers import Activation, GlobalAveragePooling2D, Flatten, Dense, concatenate, AveragePooling2D, \
-    Softmax
-from tensorflow.keras.layers import BatchNormalization
+from copy import deepcopy
 from utils.image_preprocessing import PreProcess
 from skimage.measure.entropy import shannon_entropy
 from skimage.filters.thresholding import threshold_yen
-from copy import deepcopy
+from subnet import Subnet, SubnetTwo, SubnetEffNet, MiniVGGIncRes, DummySubnet, BinaryTask, MultiTask, DummyCapsule
+from tensorflow.keras.layers import Activation, GlobalAveragePooling2D, Flatten, Dense, concatenate, AveragePooling2D, \
+    Softmax
 
 
 class EPUNet(tf.keras.Model):
