@@ -3,13 +3,14 @@ import numpy as np
 import tensorflow as tf
 
 from copy import deepcopy
-from utils.image_preprocessing import PreProcess
+from utils.image_preprocessing import PreProcess, normalize, coarse_fine_representation, light_dark_representations, \
+    lab_representation
 from skimage.measure.entropy import shannon_entropy
 from skimage.filters.thresholding import threshold_yen
 from subnetworks import Subnet
 from tensorflow.keras.layers import Activation, GlobalAveragePooling2D, Flatten, Dense, concatenate, AveragePooling2D, \
     Softmax
-
+from tqdm import tqdm
 
 class EPUNet(tf.keras.Model):
 
@@ -67,21 +68,21 @@ class EPUNet(tf.keras.Model):
     def get_interpret_output(self) -> np.ndarray:
         return np.asarray(list(self.__interpret_output)).reshape(self.features_num, self.classes)
 
-    def refine_pfm(self, pfm: dict, height=256, width=256, apply_color_map=True) -> dict:
-        refined_pfms = {}
-        for key, value in pfm.items():
-            temp_pfm = (PreProcess.normalize(
+    def refine_prm(self, prm: dict, height=256, width=256, apply_color_map=True) -> dict:
+        refined_prms = {}
+        for key, value in prm.items():
+            temp_prm = (PreProcess.normalize(
                 cv.resize(value, (width, height), interpolation=cv.INTER_CUBIC)) * 255).astype(
                 np.uint8)
 
-            thresh = threshold_yen(temp_pfm)
-            temp_pfm = (temp_pfm > thresh) * temp_pfm
+            thresh = threshold_yen(temp_prm)
+            temp_prm = (temp_prm > thresh) * temp_prm
             if apply_color_map:
-                temp_pfm = cv.applyColorMap(temp_pfm, cv.COLORMAP_HOT)
-            refined_pfms[key] = temp_pfm
-        return refined_pfms
+                temp_prm = cv.applyColorMap(temp_prm, cv.COLORMAP_HOT)
+            refined_prms[key] = temp_prm
+        return refined_prms
 
-    def get_pfm(self):
+    def get_prm(self):
         feature_maps = {}
         for i, subnet in enumerate(self.sub_nets):
             entropies = []
@@ -104,3 +105,34 @@ class EPUNet(tf.keras.Model):
 
     def get_dataset_statistics(self, dataset):
         pass
+
+    @staticmethod
+    def get_pfms(images: list, height: int, width: int):
+        # Color PFMs
+        red_green, blue_yellow = [], []
+        # Texture PFMs
+        light_dark, coarse_fine = [], []
+
+        for image in tqdm(images):
+            image = cv.resize(image, (width, height), interpolation=cv.INTER_CUBIC)
+
+            if type(image) is not np.ndarray:
+                image = image.numpy()
+
+            _, red_green_rep, blue_yellow_rep = lab_representation(image=image)
+            red_green.append(normalize(red_green_rep, height, width))
+            red_green.append(normalize(blue_yellow_rep, height, width))
+
+            coarse_fine_rep = coarse_fine_representation(image=image)
+            coarse_fine.append(normalize(coarse_fine_rep, height, width))
+
+            light_dark_rep = light_dark_representations(image=image, sigma=3)
+            light_dark.append(normalize(light_dark_rep, height, width))
+
+        # Formatting Routine
+        red_green = np.asarray(red_green).reshape(len(red_green), height, width, 1)
+        blue_yellow = np.asarray(blue_yellow).reshape(len(blue_yellow), height, width, 1)
+        coarse_fine = np.asarray(coarse_fine).reshape(len(coarse_fine), height, width, 1)
+        light_dark = np.asarray(light_dark).reshape(len(light_dark), height, width, 1)
+
+        return red_green, blue_yellow, coarse_fine, light_dark

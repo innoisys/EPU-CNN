@@ -1,6 +1,9 @@
 import cv2 as cv
 import numpy as np
 
+from scipy import ndimage as nd
+from skimage.filters import sobel
+
 
 class PreProcess(object):
 
@@ -85,3 +88,25 @@ class PreProcess(object):
         list_item.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
 
         return list_item
+
+
+# EPU Tools
+
+def normalize(image, height, width):
+    image = image.astype(np.float32)
+    image = (image - image.min()) / (image.max() - image.min() + 1e-6)
+    return cv.resize(image, (height, width), interpolation=cv.INTER_CUBIC)
+
+
+def lab_representation(image):
+    lab_rep = cv.cvtColor(image, cv.COLOR_BGR2LAB)
+    return cv.split(lab_rep)
+
+
+def coarse_fine_representation(image):
+    return sobel(cv.cvtColor(image, cv.COLOR_BGR2GRAY))
+
+
+def light_dark_representations(image, sigma=3):
+    image_grayscale = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    return nd.gaussian_filter(image_grayscale, sigma)
