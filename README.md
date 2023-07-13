@@ -77,11 +77,15 @@ EPU-CNN model given a set of training images and target labels. The `train.py` s
 images_train, images_validation = ...
 labels_train, labels_validation = ...
 epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
-            subnet=Subnet, fc_hidden_units=512, classes=1)
+             subnet=Subnet, fc_hidden_units=512, classes=1)
 epu.set_name("example-model")
-epu.fit(x=EPUNet.get_pfm(images, 128, 128), y=labels_train, epochs=100, 
-        validation_data=(EPUNet.get_pfm(images, 128, 128), labels_validation),
-        batch_size=32)
+
+optimizer = ...
+
+epu.compile(optimizer=optimizer, loss="binary_crossentropy", metrics=["accuracy"], run_eagerly=True)
+epu.fit(x=EPUNet.get_pfms(images_train, 128, 128), y=labels_train, epochs=1,
+        validation_data=(EPUNet.get_pfms(images_validation, 128, 128), labels_validation),
+        batch_size=1, callbacks=[])
 ```
 
 It is recomended to save the trained model using either the `save_model` function or save the weights using the `np.save`

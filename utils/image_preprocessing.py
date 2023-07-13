@@ -65,7 +65,7 @@ class PreProcess(object):
 
     @staticmethod
     def min_max_norm(x: np.ndarray) -> np.ndarray:
-        return (x - x.min()) / (x.max() - x.min())
+        return (x - x.min()) / (x.max() - x.min() + 1e-6)
 
     @staticmethod
     def normalize(image):

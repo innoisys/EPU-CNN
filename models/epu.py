@@ -16,11 +16,17 @@ from tensorflow.keras.layers import Activation, GlobalAveragePooling2D, Flatten,
 class EPUNet(tf.keras.Model):
 
     def __init__(self, init_size, subnet_act="tanh", epu_act="sigmoid", subnet=Subnet, features_num=5, classes=1,
-                 fc_hidden_units=512):
+                 fc_hidden_units=512, pfm_order=None):
         super(EPUNet, self).__init__()
+
+        if pfm_order is None:
+            # Original paper pfms
+            pfm_order = ["green-red", "blue-yellow", "coarse-fine", "light-dark"]
+
         self.classes = classes
         self.sub_nets = []
         self.features_num = features_num
+        self.pfm_order = pfm_order
 
         self._name = "epu_net"
         self._predicted_label = None
@@ -36,6 +42,10 @@ class EPUNet(tf.keras.Model):
                                         classes=classes))
 
         self.activate = Activation(epu_act)
+
+    def initialize_model(self, dummy_input: np.ndarray):
+        dummy_tensor = [dummy_input for _ in range(self.features_num)]
+        self.call(dummy_tensor)
 
     def call(self, x, **kwargs):
         _outputs = []
@@ -95,7 +105,7 @@ class EPUNet(tf.keras.Model):
             sorted_entropies.sort(reverse=True)
             sorted_entropies = sorted_entropies[:len(sorted_entropies) // 2]
 
-            feature_maps[i] = np.asarray(
+            feature_maps[self.pfm_order[i]] = np.asarray(
                 [PreProcess.min_max_norm(_raw_feature_maps[0, :, :, entropies.index(sorted_entropy)]) * 255 for
                  sorted_entropy in sorted_entropies]).mean(axis=0).astype(np.uint8)
 
@@ -113,6 +123,9 @@ class EPUNet(tf.keras.Model):
         red_green, blue_yellow = [], []
         # Texture PFMs
         light_dark, coarse_fine = [], []
+
+        if type(images) is not list:
+            images = [images]
 
         for image in tqdm(images):
             image = cv.resize(image, (width, height), interpolation=cv.INTER_CUBIC)
