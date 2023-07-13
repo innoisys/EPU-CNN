@@ -102,12 +102,15 @@ Currently `EPUNet` provides its interpretations using the `get_interpretation` a
 spatial expression of each **PFM** used on the image. To get the exact results with the paper the `get_prm` results need 
 to be propagated to the `refine_prm` method of the `EPUNet` class.
 
+To work, call after the loading of the model or the weights to the initialized object of epu don't use the `.predict` method
+but call the model as `epu(...)` on a PFM tensor instead.
+
 ```python
 images = ...
 epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
             subnet=Subnet, fc_hidden_units=512, classes=1)
 epu.load_model("example-model")
-epu.predict(EPUNet.get_pfm(images[0], 128, 128))
+epu(EPUNet.get_pfm(images[0], 128, 128))
 
 # Get Relevance Similarity Scores 
 rss = epu.get_interpretation()
