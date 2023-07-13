@@ -117,7 +117,7 @@ epu.load_model("example-model")
 epu(EPUNet.get_pfm(images[0], 128, 128))
 
 # Get Relevance Similarity Scores 
-rss = epu.get_interpretation()
+rss = epu.get_interpret_output()
 
 # Get Perceptual Relevance Maps
 prms = epu.refine_prm(epu.get_prm())
