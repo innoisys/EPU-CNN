@@ -103,17 +103,17 @@ spatial expression of each **PFM** used on the image. To get the exact results w
 to be propagated to the `refine_prm` method of the `EPUNet` class.
 
 ```python
-    images = ...
-    epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
-                subnet=Subnet, fc_hidden_units=512, classes=1)
-    epu.load_model("example-model")
-    epu.predict(EPUNet.get_pfm(images[0], 128, 128))
-    
-    # Get Relevance Similarity Scores 
-    rss = epu.get_interpretation()
-    
-    # Get Perceptual Relevance Maps
-    prms = epu.refine_prm(epu.get_prm())
+images = ...
+epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
+            subnet=Subnet, fc_hidden_units=512, classes=1)
+epu.load_model("example-model")
+epu.predict(EPUNet.get_pfm(images[0], 128, 128))
+
+# Get Relevance Similarity Scores 
+rss = epu.get_interpretation()
+
+# Get Perceptual Relevance Maps
+prms = epu.refine_prm(epu.get_prm())
 ```
 
 ## Datasets
