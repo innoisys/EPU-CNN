@@ -8,7 +8,7 @@ from utils.image_preprocessing import PreProcess, normalize, coarse_fine_represe
     lab_representation
 from skimage.measure.entropy import shannon_entropy
 from skimage.filters.thresholding import threshold_yen
-from subnetworks import Subnet
+from models.subnetworks import Subnet
 from tensorflow.keras.layers import Activation, GlobalAveragePooling2D, Flatten, Dense, concatenate, AveragePooling2D, \
     Softmax
 
@@ -122,7 +122,7 @@ class EPUNet(tf.keras.Model):
 
             _, red_green_rep, blue_yellow_rep = lab_representation(image=image)
             red_green.append(normalize(red_green_rep, height, width))
-            red_green.append(normalize(blue_yellow_rep, height, width))
+            blue_yellow.append(normalize(blue_yellow_rep, height, width))
 
             coarse_fine_rep = coarse_fine_representation(image=image)
             coarse_fine.append(normalize(coarse_fine_rep, height, width))

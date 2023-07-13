@@ -74,26 +74,26 @@ An example of the training process is provided in the `train.py` script. The `tr
 EPU-CNN model given a set of training images and target labels. The `train.py` script can be used as follows:
 
 ```python
-    images_train, images_validation = ...
-    labels_train, labels_validation = ...
-    epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
-                subnet=Subnet, fc_hidden_units=512, classes=1)
-    epu.set_name("example-model")
-    epu.fit(x=EPUNet.get_pfm(images, 128, 128), y=labels_train, epochs=100, 
-            validation_data=(EPUNet.get_pfm(images, 128, 128), labels_validation),
-            batch_size=32)
+images_train, images_validation = ...
+labels_train, labels_validation = ...
+epu = EPUNet(init_size=32, subnet_act="tanh", epu_act="sigmoid", features_num=4,
+            subnet=Subnet, fc_hidden_units=512, classes=1)
+epu.set_name("example-model")
+epu.fit(x=EPUNet.get_pfm(images, 128, 128), y=labels_train, epochs=100, 
+        validation_data=(EPUNet.get_pfm(images, 128, 128), labels_validation),
+        batch_size=32)
 ```
 
 It is recomended to save the trained model using either the `save_model` function or save the weights using the `np.save`
 function. For example. 
 
 ```python
-    epu.save_model("example-model")
-    # or
-    np.save("example-model-weights", epu.get_weights())
+epu.save_model("example-model")
+# or
+np.save("example-model-weights", epu.get_weights())
+# or 
+epu.save_weights("example-model-weights")
 ```
-
-The `save_weights` method does not work with subclassed models.
 
 ### Interpretations
 
