@@ -3,7 +3,7 @@
 [![Readme](https://img.shields.io/badge/README-green.svg)](README.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This is the official <b>Tensorflow</b> implementation of "E pluribus unum interpretable convolutional neural networks".
+This is the official <b>Tensorflow</b> implementation of ["E pluribus unum interpretable convolutional neural networks"](https://www.nature.com/articles/s41598-023-38459-1).
 
 
 ## Paper Abstract
@@ -95,8 +95,6 @@ function. For example.
 epu.save_model("example-model")
 # or
 np.save("example-model-weights", epu.get_weights())
-# or 
-epu.save_weights("example-model-weights")
 ```
 
 ### Interpretations
@@ -117,7 +115,7 @@ epu.load_model("example-model")
 epu(EPUNet.get_pfm(images[0], 128, 128))
 
 # Get Relevance Similarity Scores 
-rss = epu.get_interpretation()
+rss = epu.get_interpret_output()
 
 # Get Perceptual Relevance Maps
 prms = epu.refine_prm(epu.get_prm())
@@ -147,24 +145,19 @@ have been curated manually for the training and evaluation of EPU-CNN models. Th
 - [ ] Add requirements.txt
 - [ ] Implement interpretation visualizations in a nice format
 - [ ] Add evaluation code
-- [ ] Add inference code
+- [X] Add inference code
 - [ ] Add Wavelet PFM extraction
 - [ ] Add Multiclass Training and Evaluation code
 - [ ] Replace the .arxiv with official Scientific Reports citation
 
 ## Contributors
-* [George Dimas](gdimas@uth.gr)
+* [George Dimas](https://www.linkedin.com/in/george-dimas-ph-d-33230bba/)
 * [Eirini Cholopoulou](echolopoulou@uth.gr)
-* [Dimitris Iakovidis](diakovidis@uth.gr)
+* [Dimitris Iakovidis](http://is-innovation.eu/iakovidis/)
 
 ## Citation
 If you find this work useful, please cite our paper:
 
 ```
-@article{dimas2022pluribus,
-  title = {E Pluribus Unum Interpretable Convolutional Neural Networks},
-  author = {Dimas, George and Cholopoulou, Eirini and Iakovidis, Dimitris K},
-  journal = {arXiv preprint arXiv:2208.05369},
-  year = {2022}
-}
+Dimas, G., Cholopoulou, E. & Iakovidis, D.K. E pluribus unum interpretable convolutional neural networks. Sci Rep 13, 11421 (2023). https://doi.org/10.1038/s41598-023-38459-1
 ```
