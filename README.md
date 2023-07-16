@@ -151,9 +151,9 @@ have been curated manually for the training and evaluation of EPU-CNN models. Th
 - [ ] Replace the .arxiv with official Scientific Reports citation
 
 ## Contributors
-* [George Dimas](gdimas@uth.gr)
+* [George Dimas](https://www.linkedin.com/in/george-dimas-ph-d-33230bba/)
 * [Eirini Cholopoulou](echolopoulou@uth.gr)
-* [Dimitris Iakovidis](diakovidis@uth.gr)
+* [Dimitris Iakovidis](http://is-innovation.eu/iakovidis/)
 
 ## Citation
 If you find this work useful, please cite our paper:
