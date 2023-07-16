@@ -142,7 +142,7 @@ have been curated manually for the training and evaluation of EPU-CNN models. Th
 
 - [X] Add references to all the paper datasets
 - [ ] Refine README.md
-- [ ] Add requirements.txt
+- [X] Add requirements.txt
 - [ ] Implement interpretation visualizations in a nice format
 - [ ] Add evaluation code
 - [X] Add inference code
