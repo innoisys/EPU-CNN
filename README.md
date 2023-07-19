@@ -148,7 +148,7 @@ have been curated manually for the training and evaluation of EPU-CNN models. Th
 - [X] Add inference code
 - [ ] Add Wavelet PFM extraction
 - [ ] Add Multiclass Training and Evaluation code
-- [ ] Replace the .arxiv with official Scientific Reports citation
+- [X] Replace the .arxiv with official Scientific Reports citation
 
 ## Contributors
 * [George Dimas](https://www.linkedin.com/in/george-dimas-ph-d-33230bba/)
@@ -159,5 +159,14 @@ have been curated manually for the training and evaluation of EPU-CNN models. Th
 If you find this work useful, please cite our paper:
 
 ```
-Dimas, G., Cholopoulou, E. & Iakovidis, D.K. E pluribus unum interpretable convolutional neural networks. Sci Rep 13, 11421 (2023). https://doi.org/10.1038/s41598-023-38459-1
+@article{dimas2023pluribus,
+  title = {E pluribus unum interpretable convolutional neural networks},
+  author = {Dimas, George and Cholopoulou, Eirini and Iakovidis, Dimitris K},
+  journal = {Scientific Reports},
+  volume = {13},
+  number = {1},
+  pages = {11421},
+  year = {2023},
+  publisher = {Nature Publishing Group UK London}
+}
 ```
