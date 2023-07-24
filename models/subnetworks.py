@@ -152,7 +152,7 @@ class SubnetAVG(SubnetABC):
         self._name = name
 
 
-class Subnet(tf.keras.Model):
+class Subnet(SubnetABC):
     def __init__(self, init_size, act="softmax", classes=10, fc_hidden_units=512, *args, **kwargs):
         super(Subnet, self).__init__()
         self.act = act
@@ -207,7 +207,7 @@ class Subnet(tf.keras.Model):
         return self._feature_maps
 
 
-class Mini_VGG(tf.keras.Model):
+class Mini_VGG(SubnetABC):
     def __init__(self, init_size, act, classes=1, feature_name="base", *args, **kwargs):
         super(Mini_VGG, self).__init__()
         self.act = act

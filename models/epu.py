@@ -1,6 +1,8 @@
 import cv2 as cv
 import numpy as np
 import tensorflow as tf
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 from copy import deepcopy
@@ -28,7 +30,7 @@ class EPUNet(tf.keras.Model):
         self.features_num = features_num
         self.pfm_order = pfm_order
 
-        self._name = "epu_net"
+        self.__name = "epu_net"
         self._predicted_label = None
 
         # bias
@@ -36,10 +38,9 @@ class EPUNet(tf.keras.Model):
         self.__interpret_output = None
 
         # Initialization of feature networks
-        for batch in range(self.features_num):
-            self.sub_nets.append(subnet(init_size, act=subnet_act,
-                                        fc_hidden_units=fc_hidden_units,
-                                        classes=classes))
+        self.sub_nets = [subnet(init_size, act=subnet_act,
+                                fc_hidden_units=fc_hidden_units,
+                                classes=classes) for _ in range(self.features_num)]
 
         self.activate = Activation(epu_act)
 
@@ -48,11 +49,7 @@ class EPUNet(tf.keras.Model):
         self.call(dummy_tensor)
 
     def call(self, x, **kwargs):
-        _outputs = []
-
-        for i, feature in enumerate(x):
-            _outputs.append(self.sub_nets[i](feature))
-
+        _outputs = [self.sub_nets[i](feature) for i, feature in enumerate(x)]
         summation = tf.reduce_sum(_outputs, 0) + self.b
 
         self.__interpret_output = _outputs
@@ -68,10 +65,10 @@ class EPUNet(tf.keras.Model):
         return self.b.numpy()
 
     def set_name(self, name):
-        self._name = name
+        self.__name = name
 
     def get_name(self):
-        return self._name
+        return self.__name
 
     def get_predicted_label(self) -> np.ndarray:
         return self._predicted_label.numpy()
@@ -110,6 +107,32 @@ class EPUNet(tf.keras.Model):
                  sorted_entropy in sorted_entropies]).mean(axis=0).astype(np.uint8)
 
         return feature_maps
+
+    def overlay_prm(self, image, prm):
+        prm = cv.resize(prm, (image.shape[1], image.shape[0]), interpolation=cv.INTER_CUBIC)
+        return cv.addWeighted(image, 0.7, prm, 0.3, 0)
+
+    def overlay_prms(self, image, prms, add_text=True):
+        overlayed_prms = {}
+        for key, value in prms.items():
+            overlayed_prm = self.overlay_prm(image, value)
+            if add_text:
+                overlayed_prm = cv.putText(overlayed_prm, key, (10, 30),
+                                           cv.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, lineType=cv.LINE_AA)
+            overlayed_prms[key] = overlayed_prm
+        return overlayed_prms
+
+    def plot_rss(self, savefig=False, fig_name="rss.png"):
+        plt.xlim(-1, 1)
+        data = {}
+        for i, pfm_name in enumerate(self.pfm_order):
+            data[pfm_name] = self.get_interpret_output()[i][0]
+        sns.barplot(x=list(data.values()), y=list(data.keys()),
+                    palette=['red' if x < 0 else 'green' for x in data.values()])
+        plt.yticks(rotation=45)
+        plt.show()
+        if savefig:
+            plt.savefig(fig_name)
 
     def get_statistics(self, image, gt_label, features=None, datasets_human_labels=None) -> np.ndarray:
         pass
