@@ -144,7 +144,7 @@ have been curated manually for the training and evaluation of EPU-CNN models. Th
 - [ ] Refine README.md
 - [X] Add requirements.txt
 - [X] Implement interpretation visualizations in a nice format
-- [ ] Add evaluation code
+- [X] Add evaluation code
 - [X] Add inference code
 - [ ] Add Wavelet PFM extraction
 - [ ] Add Multiclass Training and Evaluation code
