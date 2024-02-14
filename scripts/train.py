@@ -8,7 +8,7 @@ from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.callbacks import LearningRateScheduler, EarlyStopping
 
 train = [cv.imread(img) for img in glob.glob("../data/banapple/train/*.jpg")]
-train_labels = np.asarray([1 if "apple" in img else 0 for img in glob.glob("../data/banapple/train/*.jpg").split("/")[-1]],
+train_labels = np.asarray([1 if "apple" in img.split("/")[-1] else 0 for img in glob.glob("../data/banapple/train/*.jpg").split("/")[-1]],
                           dtype=np.float32)
 
 validation = [cv.imread(img) for img in glob.glob("../data/banapple/validation/*.jpg")]
