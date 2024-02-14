@@ -12,7 +12,7 @@ train_labels = np.asarray([1 if "apple" in img else 0 for img in glob.glob("../d
                           dtype=np.float32)
 
 validation = [cv.imread(img) for img in glob.glob("../data/banapple/validation/*.jpg")]
-validation_labels = np.asarray([1 if "apple" in img else 0 for img in glob.glob("../data/banapple/validation/*.jpg").split("/")[-1]],
+validation_labels = np.asarray([1 if "apple" in img.split("/")[-1] else 0 for img in glob.glob("../data/banapple/validation/*.jpg")],
                                dtype=np.float32)
 
 # pfm_order is useful to keep track of the order of the pfms and their respective subnetworks
